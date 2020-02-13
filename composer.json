@@ -1,0 +1,24 @@
+{
+  "name": "christophkluge/dns",
+  "description": "This library aims to give you an object oriented wrapper around the php's dns network tools.",
+  "keywords": [
+    "dns",
+    "lookup",
+    "domain name system",
+    "wrapper"
+  ],
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Sikei\\Dns\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Christoph Kluge",
+      "email": "work@christoph-kluge.eu"
+    }
+  ],
+  "require": {}
+}
