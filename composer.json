@@ -1,5 +1,5 @@
 {
-  "name": "christophkluge/dns",
+  "name": "christoph-kluge/dns",
   "description": "This library aims to give you an object oriented wrapper around the php's dns network tools.",
   "keywords": [
     "dns",
