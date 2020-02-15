@@ -45,7 +45,7 @@ class CNAME implements RecordInterface
 
     public function class(): string
     {
-        return 'IN';
+        return $this->options->getClass();
     }
 
     public function ttl(): int

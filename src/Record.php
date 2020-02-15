@@ -125,46 +125,41 @@ class Record implements RecordInterface
         switch ($this->type) {
             case RecordType::MX:
                 return Formatter::format(sprintf('%s. %s %s %s %s %s.',
-                    $this->name, $this->options->getTtl(),
-                    $this->options->getClass(),
-                    $this->type, $this->options->getPriority(), $this->content
+                    $this->host(), $this->ttl(), $this->class(), $this->type(),
+                    $this->options->getPriority(), $this->content
                 ));
             case RecordType::TXT:
                 return Formatter::format(sprintf('%s. %s %s %s "%s"',
-                    $this->name, $this->options->getTtl(),
-                    $this->options()->getClass(),
-                    $this->type, $this->content
+                    $this->host(), $this->ttl(), $this->class(), $this->type(),
+                    $this->content
                 ));
             case RecordType::SRV:
                 return Formatter::format(sprintf('%s.%s.%s. %s %s %s %s %s %s %s',
-                    $this->options()->getService(), $this->options->getProtocol(), $this->name, $this->options->getTtl(),
-                    $this->options()->getClass(),
-                    $this->type, $this->options->getPriority(), $this->options->getWeight(),
+                    $this->options()->getService(), $this->options->getProtocol(),
+                    $this->host(), $this->ttl(), $this->class(), $this->type(),
+                    $this->options->getPriority(), $this->options->getWeight(),
                     $this->options->getPort(), $this->content
                 ));
             case RecordType::SOA:
                 return Formatter::format(sprintf('%s. %s %s %s %s. %s. %s %s %s %s %s',
-                    $this->name, $this->options->getTtl(),
-                    $this->options()->getClass(),
-                    $this->type, $this->options->getMname(), $this->options->getRname(), $this->options->getSerial(),
+                    $this->host(), $this->ttl(), $this->class(), $this->type(),
+                    $this->options->getMname(), $this->options->getRname(), $this->options->getSerial(),
                     $this->options->getRefresh(), $this->options->getRetry(), $this->options->getExpire(), $this->options->getMinTtl()
                 ));
 
             case RecordType::CNAME:
             case RecordType::NS:
                 return Formatter::format(sprintf('%s. %s %s %s %s.',
-                    $this->name, $this->options->getTtl(),
-                    $this->options()->getClass(),
-                    $this->type, $this->content
+                    $this->host(), $this->ttl(), $this->class(), $this->type(),
+                    $this->content
                 ));
 
             default:
             case RecordType::A:
             case RecordType::AAAA:
                 return Formatter::format(sprintf('%s. %s %s %s %s',
-                    $this->name, $this->options->getTtl(),
-                    $this->options()->getClass(),
-                    $this->type, $this->content
+                    $this->host(), $this->ttl(), $this->class(), $this->type(),
+                    $this->content
                 ));
         }
     }
