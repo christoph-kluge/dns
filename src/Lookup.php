@@ -1,5 +1,12 @@
 <?php namespace Sikei\Dns;
 
+use Sikei\Dns\Records\A;
+use Sikei\Dns\Records\AAAA;
+use Sikei\Dns\Records\CNAME;
+use Sikei\Dns\Records\MX;
+use Sikei\Dns\Records\NS;
+use Sikei\Dns\Records\TXT;
+
 class Lookup
 {
 
@@ -86,26 +93,22 @@ class Lookup
         foreach (dns_get_record($host, $type, $authns, $addtl) as $item) {
             switch ($item['type']) {
                 case RecordType::A:
-                    $collection->add(
-                        new Record($item['type'], $item['host'], $item['ip'], $item, $authns, $addtl)
-                    );
+                    $collection->add(new A($item['host'], $item['ip'], $item));
                     continue 2;
                 case RecordType::AAAA:
-                    $collection->add(
-                        new Record($item['type'], $item['host'], $item['ipv6'], $item, $authns, $addtl)
-                    );
+                    $collection->add(new AAAA($item['host'], $item['ipv6'], $item));
                     continue 2;
                 case RecordType::TXT:
-                    $collection->add(
-                        new Record($item['type'], $item['host'], $item['txt'], $item, $authns, $addtl)
-                    );
+                    $collection->add(new TXT($item['host'], $item['txt'], $item));
                     continue 2;
                 case RecordType::CNAME:
+                    $collection->add(new CNAME($item['host'], $item['target'], $item));
+                    continue 2;
                 case RecordType::NS:
+                    $collection->add(new NS($item['host'], $item['target'], $item));
+                    continue 2;
                 case RecordType::MX:
-                    $collection->add(
-                        new Record($item['type'], $item['host'], $item['target'], $item, $authns, $addtl)
-                    );
+                    $collection->add(new MX($item['host'], $item['target'], $item['pri'], $item));
                     continue 2;
             }
 

@@ -1,10 +1,11 @@
 <?php namespace Sikei\Dns;
 
-class Record
+class Record implements RecordInterface
 {
-    private $type;
-    private $host;
-    private $content;
+    protected $type;
+    protected $name;
+    protected $content;
+
     private $authns;
     private $addtl;
     private $options;
@@ -12,13 +13,38 @@ class Record
     public function __construct(string $type, string $name, string $content = "", array $options = [], ?array $authns = [], ?array $addtl = [])
     {
         $this->type = $type;
-        $this->host = $name;
+        $this->name = $name;
         $this->content = $content;
 
         $this->authns = $authns;
         $this->addtl = $addtl;
 
         $this->options = new RecordOptions($options);
+    }
+
+    public function host(): string
+    {
+        return $this->name;
+    }
+
+    public function type(): string
+    {
+        return $this->type;
+    }
+
+    public function class(): string
+    {
+        return 'IN';
+    }
+
+    public function ttl(): int
+    {
+        return $this->options->getTtl();
+    }
+
+    public function content(): string
+    {
+        return $this->type;
     }
 
     public function options(): RecordOptions
@@ -29,7 +55,7 @@ class Record
     public function toArray(): array
     {
         $array = [
-            'host' => $this->host,
+            'host' => $this->name,
             'ttl' => $this->options->getTtl(),
             'class' => $this->options->getClass(),
             'type' => $this->type,
@@ -79,7 +105,7 @@ class Record
         }
 
         return [
-            'host' => $this->host,
+            'host' => $this->name,
             'ttl' => $this->options->getTtl(),
             'class' => $this->options->getClass(),
             'type' => $this->type,
@@ -98,27 +124,27 @@ class Record
 
         switch ($this->type) {
             case RecordType::MX:
-                return $this->spaceToTab(sprintf('%s. %s %s %s %s %s.',
-                    $this->host, $this->options->getTtl(),
+                return Formatter::format(sprintf('%s. %s %s %s %s %s.',
+                    $this->name, $this->options->getTtl(),
                     $this->options->getClass(),
                     $this->type, $this->options->getPriority(), $this->content
                 ));
             case RecordType::TXT:
-                return $this->spaceToTab(sprintf('%s. %s %s %s "%s"',
-                    $this->host, $this->options->getTtl(),
+                return Formatter::format(sprintf('%s. %s %s %s "%s"',
+                    $this->name, $this->options->getTtl(),
                     $this->options()->getClass(),
                     $this->type, $this->content
                 ));
             case RecordType::SRV:
-                return $this->spaceToTab(sprintf('%s.%s.%s. %s %s %s %s %s %s %s',
-                    $this->options()->getService(), $this->options->getProtocol(), $this->host, $this->options->getTtl(),
+                return Formatter::format(sprintf('%s.%s.%s. %s %s %s %s %s %s %s',
+                    $this->options()->getService(), $this->options->getProtocol(), $this->name, $this->options->getTtl(),
                     $this->options()->getClass(),
                     $this->type, $this->options->getPriority(), $this->options->getWeight(),
                     $this->options->getPort(), $this->content
                 ));
             case RecordType::SOA:
-                return $this->spaceToTab(sprintf('%s. %s %s %s %s. %s. %s %s %s %s %s',
-                    $this->host, $this->options->getTtl(),
+                return Formatter::format(sprintf('%s. %s %s %s %s. %s. %s %s %s %s %s',
+                    $this->name, $this->options->getTtl(),
                     $this->options()->getClass(),
                     $this->type, $this->options->getMname(), $this->options->getRname(), $this->options->getSerial(),
                     $this->options->getRefresh(), $this->options->getRetry(), $this->options->getExpire(), $this->options->getMinTtl()
@@ -126,8 +152,8 @@ class Record
 
             case RecordType::CNAME:
             case RecordType::NS:
-                return $this->spaceToTab(sprintf('%s. %s %s %s %s.',
-                    $this->host, $this->options->getTtl(),
+                return Formatter::format(sprintf('%s. %s %s %s %s.',
+                    $this->name, $this->options->getTtl(),
                     $this->options()->getClass(),
                     $this->type, $this->content
                 ));
@@ -135,17 +161,12 @@ class Record
             default:
             case RecordType::A:
             case RecordType::AAAA:
-                return $this->spaceToTab(sprintf('%s. %s %s %s %s',
-                    $this->host, $this->options->getTtl(),
+                return Formatter::format(sprintf('%s. %s %s %s %s',
+                    $this->name, $this->options->getTtl(),
                     $this->options()->getClass(),
                     $this->type, $this->content
                 ));
         }
-    }
-
-    private function spaceToTab(string $string): string
-    {
-        return str_replace(' ', "\t", $string);
     }
 
 }

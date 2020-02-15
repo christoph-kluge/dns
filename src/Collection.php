@@ -7,7 +7,7 @@ class Collection
      */
     private $items = [];
 
-    public function add(Record $record): Collection
+    public function add(RecordInterface $record): Collection
     {
         $this->items[] = $record;
 
@@ -24,14 +24,14 @@ class Collection
 
     public function toArray(): array
     {
-        return array_map(function (Record $record) {
+        return array_map(function (RecordInterface $record) {
             return $record->toArray();
         }, $this->items);
     }
 
     public function __toString(): string
     {
-        return implode(PHP_EOL, array_map(function (Record $record) {
+        return implode(PHP_EOL, array_map(function (RecordInterface $record) {
                 return $record->__toString();
             }, $this->items)) . PHP_EOL;
     }
